@@ -9,6 +9,7 @@ using GraniteHouse.Models;
 
 namespace GraniteHouse.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
