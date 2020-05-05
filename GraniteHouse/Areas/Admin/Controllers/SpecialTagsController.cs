@@ -79,6 +79,24 @@ namespace GraniteHouse.Areas.Admin.Controllers
             return View(specialTags);
 
         }
+        //Get Details Action Method
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+           var specialTags = await _db.SpecialTags.FindAsync(id);
+            if (specialTags == null)
+            {
+                return NotFound();
+            }
+
+            return View(specialTags);
+        }
+
+       
 
 
     }

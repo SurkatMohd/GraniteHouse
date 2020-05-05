@@ -22,7 +22,7 @@
         </div>
         <br />
         <div class="form-group">
-            <input type="submit" class="btn btn-primary" asp-route-id="@Model.Id" value="Update" />
+            <input asp-action="Edit" type="submit" class="btn btn-primary"  asp-route-id="@Model.Id" value="Update" />
             <a asp-action="Index" class="btn btn-success">Back to List</a>
         </div>
     </div>
