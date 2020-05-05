@@ -79,6 +79,7 @@ namespace GraniteHouse.Areas.Admin.Controllers
             return View(specialTags);
 
         }
+
         //Get Details Action Method
         public async Task<IActionResult> Details(int? id)
         {
@@ -96,7 +97,34 @@ namespace GraniteHouse.Areas.Admin.Controllers
             return View(specialTags);
         }
 
-       
+        //Get Delete Action Method
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var specialTags = await _db.SpecialTags.FindAsync(id);
+            if (specialTags == null)
+            {
+                return NotFound();
+            }
+
+            return View(specialTags);
+        }
+
+        //Post Delete Action Method
+        [HttpPost,ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+
+            var specialTags = await _db.SpecialTags.FindAsync(id);
+            _db.SpecialTags.Remove(specialTags);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
 
     }
