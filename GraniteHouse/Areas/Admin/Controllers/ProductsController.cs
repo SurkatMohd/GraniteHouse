@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GraniteHouse.Data;
 using GraniteHouse.Models.ViewModel;
 using GraniteHouse.Utility;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting.Internal;
@@ -16,11 +17,11 @@ namespace GraniteHouse.Controllers
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _db;
-        private readonly HostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         [BindProperty]
         public ProductsViewModel ProductsVM { get; set; }
-        public ProductsController(ApplicationDbContext db,HostingEnvironment hostingEnvironment)
+        public ProductsController(ApplicationDbContext db,IWebHostEnvironment hostingEnvironment)
         {
             _db = db;
             _hostingEnvironment = hostingEnvironment;
@@ -44,7 +45,7 @@ namespace GraniteHouse.Controllers
         }
 
         //Post Products Create
-        [HttpPost,ActionName("Create")]
+        [HttpPost, ActionName("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePost()
         {
@@ -61,7 +62,7 @@ namespace GraniteHouse.Controllers
             //Image being saved
 
             //then retrived From the Database
-            string webRootPath = _hostingEnvironment.ContentRootPath;
+            string webRootPath = _hostingEnvironment.WebRootPath;
             var files = HttpContext.Request.Form.Files;
 
             var productFromDb = _db.Products.Find(ProductsVM.Products.Id);
@@ -74,7 +75,7 @@ namespace GraniteHouse.Controllers
                 var extention = Path.GetExtension(files[0].FileName);
 
                 //and change the file name to the product id
-                using(var filestream= new FileStream(Path.Combine(uploads, ProductsVM.Products.Id + extention), FileMode.Create))
+                using (var filestream = new FileStream(Path.Combine(uploads, ProductsVM.Products.Id + extention), FileMode.Create))
                 {
                     files[0].CopyTo(filestream);
                 }
