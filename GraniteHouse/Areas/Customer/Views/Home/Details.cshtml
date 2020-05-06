@@ -1,5 +1,8 @@
 ﻿@model GraniteHouse.Models.Products
 @using GraniteHouse.Extensions
+@using Microsoft.AspNetCore.Http
+
+@inject IHttpContextAccessor HttpContextAccessor
 
 
 <br />
@@ -56,7 +59,24 @@
                 <div class="col-4">
                 </div>
                 <div class="col-8">
-                    <button type="submit" value="Add to Bag" asp-route-id="@Model.Id" class="btn btn-primary form-control">Add to Bag</button>
+                    @{
+                        bool isInBag = false;
+                        List<int> lstCart = HttpContextAccessor.HttpContext.Session.Get<List<int>>("ssShoppingCart");
+                        if (lstCart != null && lstCart.Contains(Model.Id))
+                        {
+                            isInBag = true;
+                        }
+                    }
+                    @if (isInBag)
+                    {
+                        <button type="submit" value="Remove to Bag" asp-action="Remove" asp-route-id="@Model.Id" class="btn btn-danger form-control">Remove to Bag</button>
+                    }
+                    else
+                    {
+                        <button type="submit" value="Add to Bag" asp-route-id="@Model.Id" class="btn btn-primary form-control">Add to Bag</button>
+
+                    }
+
                 </div>
             </div>
 
