@@ -30,6 +30,14 @@ namespace GraniteHouse.Controllers
             return View(productList);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var product = await _db.Products.Include(m => m.ProductTypes).Include(m => m.SpecialTags).Where(m => m.Id == id).FirstOrDefaultAsync();
+            return View(product);
+        }
+
+
+
         public IActionResult Privacy()
         {
             return View();
