@@ -122,3 +122,13 @@
         </table>
     </div>
 </form>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $("#datepicker").datepicker({
+                minDate: +1, maxDate: "+3M"
+            });
+        });
+    </script>
+} 
