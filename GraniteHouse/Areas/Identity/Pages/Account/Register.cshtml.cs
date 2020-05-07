@@ -18,7 +18,8 @@ using Microsoft.Extensions.Logging;
 
 namespace GraniteHouse.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    //[AllowAnonymous]
+    [Authorize(Roles =SD.SuperAdminEndUser)]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -93,13 +94,64 @@ namespace GraniteHouse.Areas.Identity.Pages.Account
             {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, Name = Input.Name, PhoneNumber = Input.PhoneNumber};
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+
+                //if (result.Succeeded)
+                //{
+                //    if (!await _roleManager.RoleExistsAsync(SD.AdminEndUser))
+                //    {
+                //        await _roleManager.CreateAsync(new IdentityRole(SD.AdminEndUser));
+                //    }
+                //    if (!await _roleManager.RoleExistsAsync(SD.SuperAdminEndUser))
+                //    {
+                //        await _roleManager.CreateAsync(new IdentityRole(SD.SuperAdminEndUser));
+                //    }
+
+                //    if (Input.IsSuperAdmin)
+                //    {
+                //        await _userManager.AddToRoleAsync(user, SD.SuperAdminEndUser);
+                //    }
+                //    else
+                //    {
+                //        await _userManager.AddToRoleAsync(user, SD.AdminEndUser);
+                //    }
+
+
+                //    _logger.LogInformation("User created a new account with password.");
+
+                //    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                //    var callbackUrl = Url.Page(
+                //        "/Account/ConfirmEmail",
+                //        pageHandler: null,
+                //        values: new { area = "Identity", userId = user.Id, code = code },
+                //        protocol: Request.Scheme);
+
+                //    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                //        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                //    if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                //    {
+                //        return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
+                //    }
+                //    else
+                //    {
+                //        return RedirectToPage("Index", "AdminUsers", new { area = "Admin" });
+
+                //    }
+                //}
+
+
+
+
+
                 if (result.Succeeded)
                 {
-                    if(!await _roleManager.RoleExistsAsync(SD.AdminEndUser))
+                    if (!await _roleManager.RoleExistsAsync(SD.AdminEndUser))
                     {
                         await _roleManager.CreateAsync(new IdentityRole(SD.AdminEndUser));
                     }
-                    if(!await _roleManager.RoleExistsAsync(SD.SuperAdminEndUser))
+                    if (!await _roleManager.RoleExistsAsync(SD.SuperAdminEndUser))
                     {
                         await _roleManager.CreateAsync(new IdentityRole(SD.SuperAdminEndUser));
                     }
@@ -137,6 +189,9 @@ namespace GraniteHouse.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
+
+
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
