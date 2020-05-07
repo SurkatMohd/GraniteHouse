@@ -32,7 +32,6 @@
                 Disabled
             </th>
             <th></th>
-
         </tr>
 
         @foreach (var item in Model)
@@ -48,23 +47,24 @@
                     @Html.DisplayFor(m => item.PhoneNumber)
                 </td>
                 <td>
-                    @if(item.LockoutEnd!=null && item.LockoutEnd > DateTime.Now)
+                    @if (item.LockoutEnd != null && item.LockoutEnd > DateTime.Now)
                     {
-                        <lable>Disabled</lable>
+                        <label>Disabled</label>
                     }
                 </td>
                 <td>
                     @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
                     {
-                        <a type="button" class="btn btn-primary" href="@Url.Action("Edit/"+item.Id)">
+                        <a type="button" class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a type="button" class="btn btn-danger" href="@Url.Action("Delete/"+item.Id)">
+                        @*<a type="button" class="btn btn-danger" href="@Url.Action("Delete/"+item.Id)">*@
+                        <a type="button" class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     }
                 </td>
-                
+
             </tr>
 
         }
