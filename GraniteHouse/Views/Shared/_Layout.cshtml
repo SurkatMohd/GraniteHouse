@@ -19,74 +19,64 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand text-white" asp-area="Customer" asp-controller="Home" asp-action="Index">Granite House</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">Granite House</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a></li>
+
+                    @if (User.IsInRole(SD.SuperAdminEndUser))
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-controller="ProductTypes" asp-action="Index">Product Types</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tags</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-controller="AdminUsers" asp-action="Index">Admin Users</a></li>
+                    }
+                    @if (User.IsInRole(SD.SuperAdminEndUser) || User.IsInRole(SD.AdminEndUser))
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-controller="Appointments" asp-action="Index">Appointments</a></li>
+
+                    }
+
+                    @if (HttpContextAccessor.HttpContext.Session.Get<List<int>>("ssShoppingCart") != null)
+                    {
+                        <li style="color:white">
+                            <a asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index" class="nav-link">
+                                <i class="fas fa-shopping-cart"></i> &nbsp;
+                                @{
+                                    var count = HttpContextAccessor.HttpContext.Session.Get<List<int>>("ssShoppingCart").Count;
+                                }
+                                (@count)
+                            </a>
+
                         </li>
-                        @if (User.IsInRole(SD.SuperAdminEndUser))
-                        {
 
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Admin" asp-controller="ProductTypes" asp-action="Index">Product Types</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Admin" asp-controller="SpecialTags" asp-action="Index">Special Tags</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Admin" asp-controller="AdminUsers" asp-action="Index">Admin Users</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                        }
+                    }
+                    else
+                    {
+                        <li style="color:white">
+                            <a asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index" class="nav-link">
+                                <i class="fas fa-shopping-cart"></i> &nbsp;
 
+                                (0)
+                            </a>
 
-                        @if (HttpContextAccessor.HttpContext.Session.Get<List<int>>("ssShoppingCart") != null)
-                        {
-                            <li style="color:white">
-                                <a asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index" class="nav-link">
-                                    <i class="fas fa-shopping-cart"></i> &nbsp;
-                                    @{
-                                        var count = HttpContextAccessor.HttpContext.Session.Get<List<int>>("ssShoppingCart").Count;
-                                    }
-                                    (@count)
-                                </a>
+                        </li>
 
-                            </li>
+                    }
+                </ul>
 
-                        }
-                        else
-                        {
-                            <li style="color:white">
-                                <a asp-area="Customer" asp-controller="ShoppingCart" asp-action="Index" class="nav-link">
-                                    <i class="fas fa-shopping-cart"></i> &nbsp;
-
-                                    (0)
-                                </a>
-
-                            </li>
-
-                        }
-                    </ul>
-                </div>
+            </div>
+            <div>
+                <partial name="_LoginPartial" />
             </div>
         </nav>
 
+
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 pt-4">
             @RenderBody()
         </main>
     </div>
@@ -96,6 +86,8 @@
             &copy; 2020 - GraniteHouse
         </div>
     </footer>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
