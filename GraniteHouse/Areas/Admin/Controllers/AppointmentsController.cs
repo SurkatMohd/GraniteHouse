@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using GraniteHouse.Data;
+using GraniteHouse.Models;
 using GraniteHouse.Models.ViewModel;
 using GraniteHouse.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -73,5 +74,33 @@ namespace GraniteHouse.Areas.Admin.Controllers
 
             return View(appointmentVM);
         }
+
+
+        //GET Edit
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+
+            var productList = (IEnumerable<Products>)(from p in _db.Products
+                                                      join a in _db.ProductsSeletedForAppointments
+                                                      on p.Id equals a.ProductId
+                                                      where a.AppointmentId == id
+                                                      select p).Include("ProductTypes");
+
+            AppointmentDetailsViewModel objAppointmentVM = new AppointmentDetailsViewModel()
+            {
+                Appointment = _db.Appointments.Include(a => a.SalesPerson).Where(a => a.Id == id).FirstOrDefault(),
+                SalesPerson = _db.ApplicationUser.ToList(),
+                Products = productList.ToList()
+            };
+
+            return View(objAppointmentVM);
+
+        }
+
     }
 }
