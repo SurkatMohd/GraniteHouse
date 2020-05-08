@@ -38,6 +38,8 @@ namespace GraniteHouse
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
+            services.AddScoped<IDbInitializer, DbInitializer>();
+
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddHttpContextAccessor();
@@ -52,7 +54,7 @@ namespace GraniteHouse
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -69,7 +71,7 @@ namespace GraniteHouse
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            dbInitializer.Initialize();
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
